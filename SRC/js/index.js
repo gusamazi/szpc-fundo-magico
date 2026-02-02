@@ -25,14 +25,15 @@ document.addEventListener("DOMContentLoaded", function () {
 		// 4. Fazer uma requisição HTTP (POST) para a API do n8n, enviando o texto do formulário no corpo da requisição em formato JSON.
 		try {
 			const resposta = await fetch("https://gusaamaziles.app.n8n.cloud/webhook/fundo-magico", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ descricao }),
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ descricao }),
 			});
 
-			const dados = await resposta.json();
+			const textoBruto = await resposta.text()
+			const textoLimpo = textoBruto.replace(/```json/g, "").replace(/```/g, "").trim();
+			const dados = JSON.parse(textoLimpo)
+			console.log("O que chegou da IA:", textoBruto)
 
 			codigoHtml.textContent = dados.html || "";
 			codigoCss.textContent = dados.css || "";
